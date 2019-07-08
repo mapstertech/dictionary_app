@@ -1,0 +1,72 @@
+[
+    {
+      "word": "pain",
+      "meaning": "bread",
+      "audio": null,
+      "images": "https://i0.wp.com/butterwithasideofbread.com/wp-content/uploads/2012/07/Easiest-Best-Homemade-Bread.BSB_.IMG_6014.jpg?fit=775%2C517&ssl=1",
+      "grammar": "noun"
+    },
+    {
+      "word": "fromage",
+      "meaning": "cheese",
+      "audio": null,
+      "images": "https://cdn.shopify.com/s/files/1/0150/0232/products/Pearl_Valley_Swiss_Slices_36762caf-0757-45d2-91f0-424bcacc9892_large.jpg?v=1534871055",
+      "grammar": "noun"
+    },
+    {
+      "word": "vin",
+      "meaning": "wine",
+      "audio": null,
+      "images": "https://www.valenzanowine.com/wp-content/uploads/2015/11/bigstock-wine-glasses.jpg",
+      "grammar": "noun"
+    },
+    {
+      "word": "vache",
+      "meaning": "cow",
+      "audio": null,
+      "images": "https://cdn.britannica.com/s:300x300/55/174255-004-9A4971E9.jpg",
+      "grammar": "noun"
+    },
+    {
+      "word": "chat",
+      "meaning": "cat",
+      "audio": null,
+      "images": "https://upload.wikimedia.org/wikipedia/commons/6/66/An_up-close_picture_of_a_curious_male_domestic_shorthair_tabby_cat.jpg",
+      "grammar": "noun"
+    },
+    {
+      "word": "chien",
+      "meaning": "dog",
+      "audio": null,
+      "images": "https://boygeniusreport.files.wordpress.com/2016/11/puppy-dog.jpg?quality=98&strip=all",
+      "grammar": "noun"
+    },
+    {
+      "word": "eau",
+      "meaning": "water",
+      "audio": null,
+      "images": "https://i.guim.co.uk/img/media/9ebfe6eb392f208e944a21d1903b698965d35527/0_0_7360_4417/master/7360.jpg?width=300&quality=85&auto=format&fit=max&s=a781540ade30d65396ab403fd018f670",
+      "grammar": "noun"
+    },
+    {
+      "word": "ordinateur",
+      "meaning": "computer",
+      "audio": null,
+      "images": "https://assets.pcmag.com/media/images/459176-dell-precision-5720-aio.jpg?width=810&height=456",
+      "grammar": "noun"
+    },
+    {
+      "word": "téléphone portable",
+      "meaning": "cell phone",
+      "audio": null,
+      "images": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/5709/5709991_sa.jpg;maxHeight=640;maxWidth=550",
+      "grammar": "noun"
+    },
+    {
+      "word": "fenêtre",
+      "meaning": "window",
+      "audio": null,
+      "images": "https://4.imimg.com/data4/NF/SF/MY-16570734/wooden-window-250x250.jpg",
+      "grammar": "noun"
+    }
+   ]
