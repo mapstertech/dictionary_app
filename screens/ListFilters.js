@@ -42,29 +42,36 @@ export default class ListFilters extends Component {
             <View style={styles.container}>
 
                 <View style={styles.filters}>
-                    { categories && categories.map(cat=> {
-                        return (
-                            <TouchableOpacity 
-                                onPress={() => this.setState({ currentFilter : cat })}
-                                key={cat} 
-                                style={styles.filterButton}
-                            >
-                                <Text style={styles.filterButtonText}>
-                                    {cat}
-                                </Text>
-                            </TouchableOpacity>
-                        )
-                    })}
+                    <Text style={styles.filterLabel}>
+                        Grammar
+                    </Text>
+                    <View style={{ flexDirection : 'row' }}>
+                        { categories && categories.map(cat=> {
+                            return (
+                                <TouchableOpacity 
+                                    onPress={() => this.setState({ currentFilter : cat })}
+                                    key={cat} 
+                                    style={[styles.filterButton, currentFilter === cat ? styles.activeButton : null ]}
+                                >
+                                    <Text style={[ styles.catText, currentFilter === cat ? styles.activeText : null ]}>
+                                        {cat}
+                                    </Text>
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
                 </View>
 
-                <TouchableOpacity 
-                    onPress={() => this.applyFilters()}
-                    style={styles.applyButton}
-                >
-                    <Text style={styles.filterButtonText}>
-                        Apply Filters
-                    </Text>
-                </TouchableOpacity>
+                <View style={{ alignItems : 'center' }}>
+                    <TouchableOpacity 
+                        onPress={() => this.applyFilters()}
+                        style={styles.applyButton}
+                    >
+                        <Text style={styles.filterButtonText}>
+                            Apply Filters
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -77,34 +84,49 @@ const styles = StyleSheet.create({
         zIndex: 1000
     },
     filters : {
-        flexDirection : 'row',
         flexWrap : 'wrap',
-        alignItems: 'center',
-        justifyContent: 'center',
+        borderColor : '#eee',
+        borderWidth : 1,
+        padding : 10,
+    },
+    filterLabel : {
+        textTransform : 'uppercase',
+        padding : 5,
+        fontWeight : 'bold'
+
     },
     filterButton : {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ccc',
+        borderColor: '#222',
+        borderWidth : 1,
         margin : 5,
+        padding : 10,
         borderRadius : 2,
-        height : 80,
         textAlign : 'center',
-        width : 100
+    },
+    activeButton : {
+        backgroundColor : '#222',
+    },
+    catText : {
+        textTransform : 'capitalize'
+    },
+    activeText: {
+        color : '#fff',
     },
     filterButtonText : {
         fontWeight : 'bold',
-        fontSize : 14 
+        fontSize : 14 ,
+        color : '#fff'
     },
     applyButton : {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#777',
-        margin : 5,
+        backgroundColor: '#222',
+        margin : 15,
         borderRadius : 2,
-        height : 80,
         textAlign : 'center',
-        width : 100
+        padding : 14
     },
     itemText : {
         padding : 6,

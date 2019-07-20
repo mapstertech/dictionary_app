@@ -57,8 +57,8 @@ ListStack.navigationOptions = {
 ListStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
+  ListStack,
   HomeStack,
-  ListStack
 });
 
 tabNavigator.path = '';

@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class List extends Component {
     static navigationOptions = {
-        title: 'All Words',
+        title: 'Dictionary',
     }
 
     constructor(props) {
@@ -17,7 +17,8 @@ export default class List extends Component {
         this.filterWords = this.filterWords.bind(this);
         this.state = {
             words: false,
-            categories: false
+            categories: false,
+            currentCategories : 'All'
         };
     }
 
@@ -45,17 +46,20 @@ export default class List extends Component {
     filterWords = (category) => {
         const { originalWords } = this.state;
         let words = category === 'All' ? originalWords : originalWords.filter(word => word.grammar === category);
-        this.setState({ words });
+        this.setState({ words, currentCategories : category });
     }
 
     render() {
-        const { words, categories } = this.state;
+        const { words, categories, currentCategories } = this.state;
         
         let sortedWords = words ? words.sort((a,b) => (a.word> b.word) ? 1 : ((b.word> a.word) ? -1 : 0)) : [];
 
         return (
             <View style={styles.container}>
-                <ScrollView>
+                <View style={styles.filters}>
+                    <Text style={styles.cats}>
+                       {currentCategories} Words
+                    </Text>
                     <TouchableOpacity 
                         onPress={() => this.props.navigation.navigate('Filters', { categories, filterWords : this.filterWords.bind(this) })}
                         style={styles.filterButton}
@@ -64,6 +68,8 @@ export default class List extends Component {
                            Filters 
                         </Text>
                     </TouchableOpacity>
+                </View>
+                <ScrollView>
 
                     { sortedWords.map(word => {
                         return (
@@ -86,15 +92,28 @@ const styles = StyleSheet.create({
         flex: 1,
         zIndex: 1000
     },
+    filters : {
+        backgroundColor : '#333',
+        padding : 10,
+        flexDirection : 'row',
+        justifyContent : 'space-between',
+        alignItems : 'center',
+        color : '#fff'
+    },
+    cats : {
+        color : '#fff',
+        fontWeight : 'bold',
+        textTransform : 'capitalize'
+    },
     filterButton : {
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ccc',
+        backgroundColor: '#fff',
         margin : 5,
         borderRadius : 2,
-        height : 80,
+        height : 50,
         textAlign : 'center',
-        width : 100,
+        width : 70,
         zIndex : 2,
         color : '#000'
     },
@@ -104,9 +123,11 @@ const styles = StyleSheet.create({
         color : '#000'
     },
     itemText : {
-        padding : 6,
+        padding : 12,
         color : '#000',
-        fontSize : 20,
-        textTransform : 'capitalize'
+        fontSize : 15,
+        textTransform : 'uppercase',
+        borderBottomColor : '#eee',
+        borderBottomWidth : 1
     }
 });
