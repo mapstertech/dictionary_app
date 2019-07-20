@@ -65,7 +65,7 @@ export default class List extends Component {
                         style={styles.filterButton}
                     >
                         <Text style={styles.filterButtonText}>
-                           Filters 
+                          Categories 
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -113,8 +113,8 @@ const styles = StyleSheet.create({
         borderRadius : 2,
         height : 50,
         textAlign : 'center',
-        width : 70,
         zIndex : 2,
+        paddingHorizontal : 10,
         color : '#000'
     },
     filterButtonText : {

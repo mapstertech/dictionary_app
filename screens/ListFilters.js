@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class ListFilters extends Component {
     static navigationOptions = {
-        title: 'Filters',
+        title: 'Categories',
     }
 
     constructor(props) {
@@ -68,7 +68,7 @@ export default class ListFilters extends Component {
                         style={styles.applyButton}
                     >
                         <Text style={styles.filterButtonText}>
-                            Apply Filters
+                            Search
                         </Text>
                     </TouchableOpacity>
                 </View>
