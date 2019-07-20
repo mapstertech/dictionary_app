@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Dictionary",
+    "name": "Ditidaht Dictionary",
     "slug": "dictionary_app",
     "privacy": "public",
     "sdkVersion": "33.0.0",
@@ -11,9 +11,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

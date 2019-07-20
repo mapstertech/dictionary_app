@@ -29,7 +29,7 @@ export default class WordDetailScreen extends Component {
     async componentDidMount() {
         try {
             const soundObject = new Audio.Sound();
-            const sound = await soundObject.loadAsync(require('./assets/marbles-daniel_simon.mp3'))
+            const sound = await soundObject.loadAsync(require('../assets/marbles-daniel_simon.mp3'))
             this.setState({ sound })
         } catch (error) {
             console.log(error)

@@ -22,7 +22,7 @@ export default class HomeScreen extends Component {
     }
 
     async componentDidMount() {
-        const data = require('./assets/sample-data.json')
+        const data = require('../assets/sample-data.json')
         this.setState({ words: data })
     }
 
@@ -54,7 +54,7 @@ export default class HomeScreen extends Component {
         return (
             <View style={styles.container}>
                 <ImageBackground
-                    source={require('./assets/cat-wallpaper.jpg')}
+                    source={require('../assets/cat-wallpaper.jpg')}
                     style={{ height: '100%', width: '100%' }}
                 >
                     <Autocomplete
