@@ -3,7 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
-    ImageBackground
+    Image
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Audio } from 'expo-av'
@@ -44,20 +44,43 @@ export default class WordDetailScreen extends Component {
     }
 
     render() {
+        const { word } = this.state;
         return (
             <View style={styles.container}>
                 {this.state.word ?
-                    <ImageBackground
-                        source={{ uri: this.state.word.images }}
-                        style={{ height: '100%', width: '100%' }}
-                    >
-                        {Object.keys(this.state.word).map((key) => {
+                    <View style={{ alignSelf : 'stretch' }}>
+                        <View style={{ alignItems : 'center', marginVertical : 10 }}>
+                            <Text style={styles.word}>
+                                {word.word}
+                            </Text>
+                            <Text style={styles.meaning}>
+                                {word.meaning}
+                            </Text>
+                        </View>
+
+                        { word.images ? 
+                            <Image 
+                                source={{ uri: word.images }}
+                                style={{ height: 200, width: 'auto', margin : 20, borderWidth : 1  }}
+                            />
+                        : null }
+
+                        <View style={{ alignItems : 'center', marginVertical : 10 }}>
+                            <Text style={styles.grammar}>
+                                {word.grammar}
+                            </Text>
+                        </View>
+
+                        {/*
+                        {Object.keys(word).map((key) => {
                             return (
                                 <Text key={key}>
-                                    {key} -- {this.state.word[key]}
+                                    {key} -- {word[key]}
                                 </Text>
                             )
                         })}
+                        */}
+
                         <TouchableOpacity onPress={this.playAudio}>
                             <View style={{
                                 position: 'absolute',
@@ -70,7 +93,7 @@ export default class WordDetailScreen extends Component {
                                 <Text style={{ fontSize: 30 }}>Play Audio</Text>
                             </View>
                         </TouchableOpacity>
-                    </ImageBackground>
+                    </View>
                     : null}
             </View>
         );
@@ -82,7 +105,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         zIndex: 1000
     },
+    word : {
+        fontSize : 24,
+        fontWeight : 'bold',
+        textTransform : 'capitalize'
+    },
+    meaning : {
+        fontStyle : 'italic',
+        fontSize : 18,
+        color : '#444'
+    },
+    grammar : {
+        textTransform : 'capitalize',
+        fontSize : 14,
+        color : '#000'
+    }
 });
