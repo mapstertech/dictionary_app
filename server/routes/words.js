@@ -1,30 +1,38 @@
 const express = require('express')
-const tableName = 'words'
+const { TABLE_WORDS } = require('../Constants')
+const Utility = require('../Utility')
 
 module.exports = (knex) => {
     // api/features
     const router = express.Router()
     router.get('/', async (req, res) => {
         try {
-            return res.status(200).send({})            
+            const words = await knex(TABLE_WORDS)
+            return res.status(200).send(words)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
         }
     })
 
-    router.post('/', async (req, res) => {
+    router.post('/', validateWordsCreate, async (req, res) => {
         try {
-            return res.status(201).send({})
+            const { words } = req.body
+            const createdWordsRows = await knex(TABLE_WORDS).insert(words, '*')
+            return res.status(201).send(createdWordsRows)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
         }
     })
 
-    router.patch('/', async (req, res) => {
+    router.patch('/', validateWordsUpdate, async (req, res) => {
         try {
-            return res.status(201).send({})
+            const { words } = req.body
+            const completedTransaction = await Utility.batchUpdate(knex, TABLE_WORDS, words)
+            const updatedRows = completedTransaction.flat()
+
+            return res.status(201).send(updatedRows)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
@@ -55,42 +63,26 @@ module.exports = (knex) => {
     return router
 }
 
-// function validateFrontLinesCreate(req, res, next) {
-//     if (req.body.features && Array.isArray(req.body.features)) {
-//         return next()
-//     } else {
-//         return res.status(400).send('features missing and/or features is not an array')
-//     }
-// }
+function validateWordsCreate(req, res, next) {
+    if (req.body.words && Array.isArray(req.body.words)) {
+        return next()
+    } else {
+        return res.status(400).send('words missing and/or words is not an array')
+    }
+}
 
-// function validateFeaturesUpdate(req, res, next) {
-//     if (!req.body.features || !Array.isArray(req.body.features)) {
-//         return res.status(400).send('features missing and/or features is not an array')
-//     }
+function validateWordsUpdate(req, res, next) {
+    if (!req.body.words || !Array.isArray(req.body.words)) {
+        return res.status(400).send('word missing and/or word is not an array')
+    }
 
-//     const validFeatureIds = req.body.features.every((feature) => {
-//         return feature.properties.feature_id && typeof feature.properties.feature_id === 'number'
-//     })
+    const validFeatureIds = req.body.words.every((word) => {
+        return word.id && typeof word.id === 'number'
+    })
 
-//     if (!validFeatureIds) {
-//         return res.status(400).send('feature.properties.feature_id missing/not valid from one or more features')
-//     }
+    if (!validFeatureIds) {
+        return res.status(400).send('id missing/not valid from one or more word(s)')
+    }
 
-//     return next()
-// }
-
-// function validateFeaturesDelete(req, res, next) {
-//     if (!req.body.features || !Array.isArray(req.body.features)) {
-//         return res.status(400).send('features missing and/or features is not an array')
-//     }
-
-//     const validFeatureIds = req.body.features.every((id) => {
-//         return typeof id === 'number'
-//     })
-
-//     if (!validFeatureIds) {
-//         return res.status(400).send('one or more feature ids is not of type number')
-//     }
-
-//     return next()
-// }
+    return next()
+}

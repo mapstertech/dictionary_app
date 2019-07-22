@@ -1,12 +1,12 @@
 const express = require('express')
-const tableName = 'users'
+const { TABLE_USERS } = require('../Constants')
 
 module.exports = (knex) => {
     // api/features
     const router = express.Router()
     router.get('/', async (req, res) => {
         try {
-            return res.status(200).send({})            
+            return res.status(200).send({})
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
