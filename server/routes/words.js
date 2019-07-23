@@ -39,8 +39,13 @@ module.exports = (knex) => {
         }
     })
 
-    router.delete('/', async (req, res) => {
+    router.delete('/', validateWordsDelete, async (req, res) => {
         try {
+            const { words } = req.body
+            await knex(TABLE_WORDS)
+                .whereIn('id', words)
+                .del()
+
             return res.sendStatus(202)
         } catch(err) {
             console.log(err)
@@ -82,6 +87,23 @@ function validateWordsUpdate(req, res, next) {
 
     if (!validFeatureIds) {
         return res.status(400).send('id missing/not valid from one or more word(s)')
+    }
+
+    return next()
+}
+
+function validateWordsDelete(req, res, next) {
+    // TODO add is_admin authentication
+    if (!req.body.words || !Array.isArray(req.body.words)) {
+        return res.status(400).send('words missing and/or words is not an array')
+    }
+
+    const validWordIds = req.body.words.every((id) => {
+        return typeof id === 'number'
+    })
+
+    if (!validWordIds) {
+        return res.status(400).send('one or more word ids is not of type number')
     }
 
     return next()
