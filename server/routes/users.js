@@ -1,5 +1,7 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
 const { TABLE_USERS } = require('../Constants')
+const { validateJwt, signJwtAndSend } = require('../Utility')
 
 module.exports = (knex) => {
     // api/features
@@ -15,37 +17,67 @@ module.exports = (knex) => {
 
     router.post('/', async (req, res) => {
         try {
-            return res.status(201).send({})
-        } catch(err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-    })
+            const { email, password, is_admin } = req.body
+            const password_digest = await bcrypt.hash(password, 10)
+            const user = await knex(TABLE_USERS).insert({
+                email,
+                password_digest,
+                is_admin
+            }, '*')
 
-    router.patch('/', async (req, res) => {
-        try {
-            return res.status(201).send({})
-        } catch(err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-    })
-
-    router.delete('/', async (req, res) => {
-        try {
-            return res.sendStatus(202)
-        } catch(err) {
-            console.log(err)
-            return res.sendStatus(500)
-        }
-    })
-
-    router.get('/:wordId', async (req, res, next) => {
-        try {
-            if (typeof req.params.wordId !== 'number') {
-                return next()
+            if (user) {
+                return signJwtAndSend({ user: user[0] }, res, 201)
             }
-            return res.send({})
+
+            return res.sendStatus(500)
+        } catch(err) {
+            console.log('error in POST api/users', err)
+            if (err.constraint === 'users_email_unique') {
+                return res.status(403).send({
+                    msg: `Email ${req.body.email} is already associated with an account.`
+                })
+            }
+
+            return res.sendStatus(500)
+        }
+    })
+
+    // router.patch('/', async (req, res) => {
+    //     try {
+    //         return res.status(201).send({})
+    //     } catch(err) {
+    //         console.log(err)
+    //         return res.sendStatus(500)
+    //     }
+    // })
+
+    router.delete('/', validateJwt, validateUsersDelete, async (req, res) => {
+        try {
+            const { user } = req
+            const { users } = req.body
+            if (user.is_admin) {
+                await knex(TABLE_USERS)
+                    .whereIn('id', users)
+                    .del()
+
+                return res.sendStatus(202)
+            } else {
+                return res.status(403).send({ msg: `user ${user.email} is not an admin` })
+            }
+        } catch(err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+    })
+
+    router.get('/:userId', async (req, res, next) => {
+        try {
+            const userFields = ['id', 'email', 'is_admin']
+            const user = await knex.select(userFields)
+                .from(TABLE_USERS).where({
+                    id: req.params.userId
+                })
+            return res.send(user)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
@@ -55,42 +87,23 @@ module.exports = (knex) => {
     return router
 }
 
-// function validateFrontLinesCreate(req, res, next) {
-//     if (req.body.features && Array.isArray(req.body.features)) {
-//         return next()
-//     } else {
-//         return res.status(400).send('features missing and/or features is not an array')
-//     }
-// }
+function validateUsersDelete(req, res, next) {
+    // TODO add is_admin authentication
+    if (!req.body.users || !Array.isArray(req.body.users)) {
+        return res.status(400).send({
+            msg: 'users missing and/or users is not an array'
+        })
+    }
 
-// function validateFeaturesUpdate(req, res, next) {
-//     if (!req.body.features || !Array.isArray(req.body.features)) {
-//         return res.status(400).send('features missing and/or features is not an array')
-//     }
+    const validUserIds = req.body.users.every((id) => {
+        return typeof id === 'number'
+    })
 
-//     const validFeatureIds = req.body.features.every((feature) => {
-//         return feature.properties.feature_id && typeof feature.properties.feature_id === 'number'
-//     })
+    if (!validUserIds) {
+        return res.status(400).send({
+            msg: 'one or more word ids is not of type number'
+        })
+    }
 
-//     if (!validFeatureIds) {
-//         return res.status(400).send('feature.properties.feature_id missing/not valid from one or more features')
-//     }
-
-//     return next()
-// }
-
-// function validateFeaturesDelete(req, res, next) {
-//     if (!req.body.features || !Array.isArray(req.body.features)) {
-//         return res.status(400).send('features missing and/or features is not an array')
-//     }
-
-//     const validFeatureIds = req.body.features.every((id) => {
-//         return typeof id === 'number'
-//     })
-
-//     if (!validFeatureIds) {
-//         return res.status(400).send('one or more feature ids is not of type number')
-//     }
-
-//     return next()
-// }
+    return next()
+}

@@ -20,6 +20,7 @@ app.use(cors())
 
 // Router
 app.use('/api', routes.API(knex))
+app.use('/auth', routes.AUTH(knex))
 
 app.get('*', (req, res) => {
     return res.sendStatus(404)

@@ -17,7 +17,7 @@ exports.seed = async function(knex) {
         ]
 
         return knex(usersTable).del().then(() => knex(usersTable).insert(users))
-    } catch (error) {
+    } catch(err) {
         console.log('error in seeds/add-war-diaries.js')
         console.log(error)
     }

@@ -6,7 +6,7 @@ exports.seed = async function(knex) {
 
         return knex(wordsTable).del()
             .then(() => knex(wordsTable).insert(wordsSeed))
-    } catch(error) {
+    } catch(err) {
         console.log('error in seeds/add-units.js')
         console.log(error)
     }
