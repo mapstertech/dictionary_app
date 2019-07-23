@@ -72,13 +72,13 @@ function validateWordsCreate(req, res, next) {
     if (req.body.words && Array.isArray(req.body.words)) {
         return next()
     } else {
-        return res.status(400).send('words missing and/or words is not an array')
+        return res.status(400).send({ error: 'words missing and/or words is not an array'})
     }
 }
 
 function validateWordsUpdate(req, res, next) {
     if (!req.body.words || !Array.isArray(req.body.words)) {
-        return res.status(400).send('word missing and/or word is not an array')
+        return res.status(400).send({ error: 'word missing and/or word is not an array'})
     }
 
     const validFeatureIds = req.body.words.every((word) => {
@@ -86,7 +86,7 @@ function validateWordsUpdate(req, res, next) {
     })
 
     if (!validFeatureIds) {
-        return res.status(400).send('id missing/not valid from one or more word(s)')
+        return res.status(400).send({ error: 'id missing/not valid from one or more word(s)'})
     }
 
     return next()
@@ -95,7 +95,7 @@ function validateWordsUpdate(req, res, next) {
 function validateWordsDelete(req, res, next) {
     // TODO add is_admin authentication
     if (!req.body.words || !Array.isArray(req.body.words)) {
-        return res.status(400).send('words missing and/or words is not an array')
+        return res.status(400).send({ error: 'words missing and/or words is not an array'})
     }
 
     const validWordIds = req.body.words.every((id) => {
@@ -103,7 +103,7 @@ function validateWordsDelete(req, res, next) {
     })
 
     if (!validWordIds) {
-        return res.status(400).send('one or more word ids is not of type number')
+        return res.status(400).send({ error: 'one or more word ids is not of type number'})
     }
 
     return next()

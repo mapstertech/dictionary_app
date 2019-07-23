@@ -11,7 +11,7 @@ module.exports = {
 
         router.get('/', async (req, res) => {
             console.log('api')
-            res.send('/api')
+            res.send({ msg: '/api'})
         })
 
         return router
