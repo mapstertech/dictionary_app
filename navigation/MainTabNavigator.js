@@ -6,7 +6,6 @@ import TabBarIcon from '../components/TabBarIcon';
 
 import HomeScreen from '../screens/Home';
 import ListScreen from '../screens/List';
-import FiltersScreen from '../screens/ListFilters';
 import WordDetailScreen from '../screens/WordDetail';
 
 const config = Platform.select({
@@ -41,7 +40,6 @@ HomeStack.path = '';
 const ListStack = createStackNavigator(
   {
     List : ListScreen,
-    Filters : FiltersScreen,
     WordDetail : WordDetailScreen
   },
   config
