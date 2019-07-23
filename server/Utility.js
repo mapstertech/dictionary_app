@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET
-const { NO_AUTH, NO_PERMISSION, LOGIN_ERROR } = require('./Constants')
+const { NO_AUTH, NO_PERMISSION, LOGIN_ERROR, NOT_ADMIN_ERROR } = require('./Constants')
 
 function batchUpdate(knex, table, collection) {
     return knex.transaction((trx) => {
@@ -73,9 +73,21 @@ function extractToken(req) {
     return bodyToken || parsedAuthorization;
 }
 
+function validateUserAdmin(req, res, next) {
+    if (req.user && req.user.is_admin) {
+        next()
+    } else {
+        return res.status(401).json({
+            code: NO_PERMISSION,
+            message: NOT_ADMIN_ERROR
+        })
+    }
+}
+
 module.exports = {
     extractToken,
     validateJwt,
     signJwtAndSend,
-    batchUpdate
+    batchUpdate,
+    validateUserAdmin,
 }

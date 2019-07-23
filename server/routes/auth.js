@@ -4,7 +4,7 @@ const { validateJwt, signJwtAndSend } = require('../Utility')
 const { TABLE_USERS } = require('../Constants')
 
 module.exports = (knex) => {
-    // auth/login
+    // /auth
     const router = express.Router()
     router.post('/login', async (req, res) => {
         try {

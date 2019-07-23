@@ -1,10 +1,10 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const { TABLE_USERS } = require('../Constants')
-const { validateJwt, signJwtAndSend } = require('../Utility')
+const { validateJwt, signJwtAndSend, validateUserAdmin } = require('../Utility')
 
 module.exports = (knex) => {
-    // api/features
+    // /api/users
     const router = express.Router()
     router.get('/', validateJwt, async (req, res) => {
         try {
@@ -43,7 +43,7 @@ module.exports = (knex) => {
         }
     })
 
-    router.patch('/', async (req, res) => {
+    router.patch('/', validateJwt, validateUsersUpdate, async (req, res) => {
         try {
             return res.status(201).send({})
         } catch(err) {
@@ -54,17 +54,13 @@ module.exports = (knex) => {
 
     router.delete('/', validateJwt, validateUsersDelete, async (req, res) => {
         try {
-            const { user } = req
             const { users } = req.body
-            if (user.is_admin) {
-                await knex(TABLE_USERS)
-                    .whereIn('id', users)
-                    .del()
 
-                return res.sendStatus(202)
-            } else {
-                return res.status(403).send({ msg: `user ${user.email} is not an admin` })
-            }
+            await knex(TABLE_USERS)
+                .whereIn('id', users)
+                .del()
+
+            return res.sendStatus(202)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
@@ -89,7 +85,26 @@ module.exports = (knex) => {
 }
 
 function validateUsersDelete(req, res, next) {
-    // TODO add is_admin authentication
+    if (!req.body.users || !Array.isArray(req.body.users)) {
+        return res.status(400).send({
+            msg: 'users missing and/or users is not an array'
+        })
+    }
+
+    const validUserIds = req.body.users.every((id) => {
+        return typeof id === 'number'
+    })
+
+    if (!validUserIds) {
+        return res.status(400).send({
+            msg: 'one or more word ids is not of type number'
+        })
+    }
+
+    return next()
+}
+
+function validateUsersUpdate(req, res, next) {
     if (!req.body.users || !Array.isArray(req.body.users)) {
         return res.status(400).send({
             msg: 'users missing and/or users is not an array'

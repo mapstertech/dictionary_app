@@ -1,9 +1,9 @@
 const express = require('express')
 const { TABLE_WORDS } = require('../Constants')
-const Utility = require('../Utility')
+const { batchUpdate, validateUserAdmin, validateJwt } = require('../Utility')
 
 module.exports = (knex) => {
-    // api/features
+    // /api/words
     const router = express.Router()
     router.get('/', async (req, res) => {
         try {
@@ -15,7 +15,7 @@ module.exports = (knex) => {
         }
     })
 
-    router.post('/', validateWordsCreate, async (req, res) => {
+    router.post('/', validateJwt, validateWordsCreate, async (req, res) => {
         try {
             const { words } = req.body
             const createdWordsRows = await knex(TABLE_WORDS).insert(words, '*')
@@ -26,10 +26,10 @@ module.exports = (knex) => {
         }
     })
 
-    router.patch('/', validateWordsUpdate, async (req, res) => {
+    router.patch('/', validateJwt, validateWordsUpdate, async (req, res) => {
         try {
             const { words } = req.body
-            const completedTransaction = await Utility.batchUpdate(knex, TABLE_WORDS, words)
+            const completedTransaction = await batchUpdate(knex, TABLE_WORDS, words)
             const updatedRows = completedTransaction.flat()
 
             return res.status(201).send(updatedRows)
@@ -39,7 +39,7 @@ module.exports = (knex) => {
         }
     })
 
-    router.delete('/', validateWordsDelete, async (req, res) => {
+    router.delete('/', validateJwt, validateWordsDelete, async (req, res) => {
         try {
             const { words } = req.body
             await knex(TABLE_WORDS)
