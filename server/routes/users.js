@@ -6,9 +6,10 @@ const { validateJwt, signJwtAndSend } = require('../Utility')
 module.exports = (knex) => {
     // api/features
     const router = express.Router()
-    router.get('/', async (req, res) => {
+    router.get('/', validateJwt, async (req, res) => {
         try {
-            return res.status(200).send({})
+            const users = await knex.select(['id', 'email', 'is_admin']).from(TABLE_USERS)
+            return res.status(200).send(users)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
