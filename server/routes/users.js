@@ -1,7 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-const { TABLE_USERS } = require('../Constants')
-const { validateJwt, signJwtAndSend, validateUserAdmin } = require('../Utility')
+const { TABLE_USERS, EMAIL_ADDRESS_MISSING_ERROR, ID_TYPE_ERROR, PASSWORD_RESTRICTED_ERROR } = require('../Constants')
+const { validateJwt, signJwtAndSend, validateUserAdmin, batchUpdate } = require('../Utility')
 
 module.exports = (knex) => {
     // /api/users
@@ -45,9 +45,18 @@ module.exports = (knex) => {
 
     router.patch('/', validateJwt, validateUsersUpdate, async (req, res) => {
         try {
-            return res.status(201).send({})
+            const { users } = req.body
+            const completedTransaction = await batchUpdate(knex, TABLE_USERS, users)
+            const updatedRows = completedTransaction.flat()
+
+            return res.status(201).send(updatedRows)
         } catch(err) {
-            console.log(err)
+            console.log('error in PATCH users:', err)
+            if (err.constraint === 'users_email_unique') {
+                return res.status(403).send({
+                    msg: `Email ${req.body.email} is already associated with an account.`
+                })
+            }
             return res.sendStatus(500)
         }
     })
@@ -111,13 +120,23 @@ function validateUsersUpdate(req, res, next) {
         })
     }
 
-    const validUserIds = req.body.users.every((id) => {
-        return typeof id === 'number'
-    })
+    const errorMessages = req.body.users.reduce((acc, cur) => {
+        if (typeof cur.id !== 'number' && !acc.includes(ID_TYPE_ERROR)) {
+            acc.push(ID_TYPE_ERROR)
+        }
+        if (!cur.email && !acc.includes(EMAIL_ADDRESS_MISSING_ERROR)) {
+            acc.push(EMAIL_ADDRESS_MISSING_ERROR)
+        }
+        if (cur.password && !acc.includes(PASSWORD_RESTRICTED_ERROR)) {
+            acc.push(PASSWORD_RESTRICTED_ERROR)
+        }
 
-    if (!validUserIds) {
+        return acc
+    }, [])
+
+    if (errorMessages.length > 0) {
         return res.status(400).send({
-            msg: 'one or more word ids is not of type number'
+            msg: errorMessages
         })
     }
 
