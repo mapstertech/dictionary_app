@@ -43,14 +43,14 @@ module.exports = (knex) => {
         }
     })
 
-    // router.patch('/', async (req, res) => {
-    //     try {
-    //         return res.status(201).send({})
-    //     } catch(err) {
-    //         console.log(err)
-    //         return res.sendStatus(500)
-    //     }
-    // })
+    router.patch('/', async (req, res) => {
+        try {
+            return res.status(201).send({})
+        } catch(err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+    })
 
     router.delete('/', validateJwt, validateUsersDelete, async (req, res) => {
         try {
