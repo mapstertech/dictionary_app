@@ -54,7 +54,7 @@ export default class HomeScreen extends Component {
         return (
             <View style={styles.container}>
                 <ImageBackground
-                    source={require('../assets/cat-wallpaper.jpg')}
+                    source={require('../assets/images/nitinaht-lake.png')}
                     style={{ height: '100%', width: '100%' }}
                 >
                     <Autocomplete
@@ -98,8 +98,11 @@ const styles = StyleSheet.create({
         width: '80%'
     },
     itemText: {
-        fontSize: 15,
-        margin: 2
+        fontSize: 18,
+        padding : 8,
+        borderBottomWidth : 1,
+        borderBottomColor : '#eee',
+        textTransform : 'capitalize'
     },
     descriptionContainer: {
         // `backgroundColor` needs to be set otherwise the

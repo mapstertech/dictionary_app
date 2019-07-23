@@ -3,8 +3,10 @@ import {
     StyleSheet,
     Text,
     View,
-    Image
+    Image,
+    Platform
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Audio } from 'expo-av'
 
@@ -21,26 +23,29 @@ export default class WordDetailScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            word: this.props.navigation.getParam('data'),
-            sound: null
+            word: this.props.navigation.getParam('data')
+            //sound: null
         };
     }
 
     async componentDidMount() {
+        /* Depr
         try {
-            const soundObject = new Audio.Sound();
-            const sound = await soundObject.loadAsync(require('../assets/marbles-daniel_simon.mp3'))
+            const sound = new Audio.Sound();
+            await sound.loadAsync(require('../assets/marbles-daniel_simon.mp3'))
             this.setState({ sound })
         } catch (error) {
             console.log(error)
-        }
+        };
+        */
     }
 
     playAudio = async () => {
         // load and play audio
-        if (this.state.sound) {
-            await this.state.sound.playAsync()
-        }
+        const sound = new Audio.Sound()
+        await sound.unloadAsync()
+        await sound.loadAsync(require('../assets/marbles-daniel_simon.mp3'))
+        await sound.playAsync()
     }
 
     render() {
@@ -81,18 +86,18 @@ export default class WordDetailScreen extends Component {
                         })}
                         */}
 
-                        <TouchableOpacity onPress={this.playAudio}>
-                            <View style={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '20%',
-                                backgroundColor: 'white',
-                                width: 50,
-                                height: 50,
-                            }}>
-                                <Text style={{ fontSize: 30 }}>Play Audio</Text>
-                            </View>
-                        </TouchableOpacity>
+                        <View style={{ position : 'absolute' , top : 10, right : 15 }}>
+                            <TouchableOpacity onPress={this.playAudio}>
+                                <Ionicons
+                                  name={
+                                    Platform.OS === 'ios'
+                                      ? `ios-volume-high${focused ? '' : '-outline'}`
+                                      : 'md-volume-high'
+                                  }
+                                  size={36}
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     : null}
             </View>
@@ -102,7 +107,7 @@ export default class WordDetailScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#FFF',
         flex: 1,
         alignItems: 'center',
         zIndex: 1000
