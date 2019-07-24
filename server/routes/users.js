@@ -49,7 +49,7 @@ module.exports = (knex) => {
             const completedTransaction = await batchUpdate(knex, TABLE_USERS, users)
             const updatedRows = completedTransaction.flat()
 
-            return res.status(201).send(updatedRows)
+            return res.status(204).send(updatedRows)
         } catch(err) {
             console.log('error in PATCH users:', err)
             if (err.constraint === 'users_email_unique') {

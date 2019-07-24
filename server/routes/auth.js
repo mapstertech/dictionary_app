@@ -67,7 +67,9 @@ module.exports = (knex) => {
                     msg: 'password reset link expired'
                 })
             } else {
-                return res.sendStatus(200)
+                return res.status(200).send({
+                    token: reset_password_token
+                })
             }
         } catch(err) {
             console.log('reset_password', err)
@@ -121,15 +123,15 @@ module.exports = (knex) => {
                         'If you did not request this, please ignore this email and your password will remain unchanged.'
                     ].join('\n\n')
                 }
-                console.log('EMAIL:', mailOptions.text)
 
+                console.log('PASS RESET TOKEN:', token)
                 transporter.sendMail(mailOptions, (err, resp) => {
                     if (err) {
                         console.error('Error sending password recovery email', err)
                         return res.sendStatus(500)
                     } else {
                         console.log('Nodemailer response:', resp)
-                        return res.sendStatus(200)
+                        return res.status(200).send({ token })
                     }
                 })
             }
@@ -139,5 +141,56 @@ module.exports = (knex) => {
         }
     })
 
+    router.patch('/update_password_with_email', validateUpdatePasswordWithEmail, async (req, res) => {
+        try {
+            const { email, password, token } = req.body
+            const password_digest = await bcrypt.hash(password, 10)
+            const updatedUser = await knex(TABLE_USERS)
+                .where({
+                    email,
+                    reset_password_token: token
+                })
+                .update({
+                    password_digest,
+                    reset_password_token: null,
+                    reset_password_expires: null
+                }, '*')
+
+            // console.log('updated user', updatedUser)
+            if (updatedUser.length > 0) {
+                return res.sendStatus(204)
+            } else {
+                return res.status(400).send({
+                    msg: 'Password not updated. Email/token was not valid.'
+                })
+            }
+        } catch(err) {
+            console.log(err)
+            return res.sendStatus(500)
+        }
+    })
+
     return router
+}
+
+function validateUpdatePasswordWithEmail(req, res, next) {
+    if (!req.body.email) {
+        return res.status(400).send({
+            msg: 'email is a required field'
+        })
+    }
+
+    if (!req.body.password) {
+        return res.status(400).send({
+            msg: 'password is a required field'
+        })
+    }
+
+    if (!req.body.token) {
+        return res.status(400).send({
+            msg: 'token is a required field'
+        })
+    }
+
+    return next()
 }

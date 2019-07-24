@@ -32,7 +32,7 @@ module.exports = (knex) => {
             const completedTransaction = await batchUpdate(knex, TABLE_WORDS, words)
             const updatedRows = completedTransaction.flat()
 
-            return res.status(201).send(updatedRows)
+            return res.status(204).send(updatedRows)
         } catch(err) {
             console.log(err)
             return res.sendStatus(500)
@@ -93,7 +93,6 @@ function validateWordsUpdate(req, res, next) {
 }
 
 function validateWordsDelete(req, res, next) {
-    // TODO add is_admin authentication
     if (!req.body.words || !Array.isArray(req.body.words)) {
         return res.status(400).send({ msg: 'words missing and/or words is not an array'})
     }
