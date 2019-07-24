@@ -91,7 +91,7 @@ export default class WordDetailScreen extends Component {
                                 <Ionicons
                                   name={
                                     Platform.OS === 'ios'
-                                      ? `ios-volume-high${focused ? '' : '-outline'}`
+                                      ? 'ios-volume-high'
                                       : 'md-volume-high'
                                   }
                                   size={36}

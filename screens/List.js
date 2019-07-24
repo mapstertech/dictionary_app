@@ -7,7 +7,6 @@ import {
     Animated
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import SlidingUpPanel from 'rn-sliding-up-panel';
 
 export default class List extends Component {
     static navigationOptions = {
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
         borderRadius : 2,
         textAlign : 'center',
         padding : 14,
-        width : 100
+        width : 120
     },
     closeButtonText : {
         fontWeight : 'bold',
