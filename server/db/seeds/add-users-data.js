@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const usersTable = 'users'
+const { TABLE_USERS } = require('../../Constants')
 
 exports.seed = async function(knex) {
     try {
@@ -16,7 +16,7 @@ exports.seed = async function(knex) {
             }
         ]
 
-        return knex(usersTable).del().then(() => knex(usersTable).insert(users))
+        return knex(TABLE_USERS).del().then(() => knex(TABLE_USERS).insert(users))
     } catch(err) {
         console.log('error in seeds/add-war-diaries.js')
         console.log(error)

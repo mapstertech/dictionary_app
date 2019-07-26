@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
 const crypto = require('crypto')
 const { validateJwt, signJwtAndSend } = require('../Utility')
-const { TABLE_USERS } = require('../Constants')
+const { TABLE_USERS, WEB_CLIENT_URL } = require('../Constants')
 
 module.exports = (knex) => {
     // /auth
@@ -11,6 +11,7 @@ module.exports = (knex) => {
     router.post('/login', async (req, res) => {
         try {
             const { email, password } = req.body
+            console.log(email, password)
             const user = await knex(TABLE_USERS).where({
                 email
             })
@@ -68,7 +69,8 @@ module.exports = (knex) => {
                 })
             } else {
                 return res.status(200).send({
-                    token: reset_password_token
+                    token: reset_password_token,
+                    email: user.email
                 })
             }
         } catch(err) {
@@ -119,7 +121,7 @@ module.exports = (knex) => {
                     text: [
                         'You are receiving this because you (or someone else) has requested the reset of your password.',
                         'Please click on the following link to complete the process within one hour of receiving it:',
-                        `http://localhost:3000/reset/${token}`,
+                        `${WEB_CLIENT_URL}/reset_password/${token}`,
                         'If you did not request this, please ignore this email and your password will remain unchanged.'
                     ].join('\n\n')
                 }
