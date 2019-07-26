@@ -7,6 +7,30 @@ npx knex migrate:latest
 npx knex seed:run
 
 ## ENDPOINTS
+- for most endpoints you need to send token in the body or as an authorization header
+- if sending a body include the Content-type: application/json header
+```
+fetch(URL, {
+	method: 'POST',
+	headers: {
+		'Content-type': 'application/json',
+	},
+	body: {
+		...params,
+		token: accessToken
+	}
+})
+```
+or 
+```
+fetch(URL, {
+	method: 'POST',
+	headers: {
+		'Content-type': 'application/json',
+		'Authorization': `Bearer: ${accessToken}`
+	}
+})
+```
 
 ### /api
 GET /api/words
