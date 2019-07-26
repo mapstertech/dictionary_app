@@ -6,30 +6,45 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "server-dev": "nodemon server/index.js",
+    "server": "node index.js"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "csvtojson": "^2.0.10",
+    "dotenv": "^8.0.0",
     "@expo/samples": "~3.0.0",
     "@expo/vector-icons": "^10.0.1",
-    "@react-navigation/web": "^1.0.0-alpha.9",
     "expo": "^33.0.0",
     "expo-asset": "^5.0.0",
     "expo-constants": "^5.0.0",
     "expo-font": "^5.0.0",
     "expo-web-browser": "^5.0.0",
+    "expo-av": "^5.0.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.19.0",
+    "morgan": "^1.9.1",
+    "nodemailer": "^6.3.0",
+    "pg": "^7.11.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-autocomplete-input": "^4.1.0",
     "react-native-web": "^0.11.4",
-    "react-navigation": "^3.11.0"
+    "react-navigation": "^3.11.0",
+    "@react-navigation/web": "^1.0.0-alpha.9"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.1.0",
+    "babel-preset-expo": "^5.1.1",
     "jest-expo": "^33.0.0"
+    "nodemon": "^1.19.1"
   },
   "private": true
 }
