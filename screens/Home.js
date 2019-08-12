@@ -16,14 +16,8 @@ export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: [],
             query: ''
         };
-    }
-
-    async componentDidMount() {
-        const data = require('../assets/sample-data.json')
-        this.setState({ words: data })
     }
 
     filterData(query) {
@@ -31,7 +25,7 @@ export default class HomeScreen extends Component {
             return [];
         }
 
-        const { words } = this.state;
+        const { words } = this.props.screenProps;
         const regex = new RegExp(`${query.trim()}`, 'i');
         return words.filter((data) => data.word.search(regex) >= 0);
     }
@@ -46,38 +40,39 @@ export default class HomeScreen extends Component {
         const { query } = this.state;
         const data = this.filterData(query);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
-        // console.log({
-        //     query,
-        //     data,
-        //     comp
-        // })
         return (
             <View style={styles.container}>
-                <ImageBackground
-                    source={require('../assets/images/nitinaht-lake.png')}
-                    style={{ height: '100%', width: '100%' }}
-                >
-                    <Autocomplete
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        containerStyle={styles.autocompleteContainer}
-                        data={data.length === 1 && comp(query, data[0].word) ? [] : data}
-                        defaultValue={query}
-                        onChangeText={text => this.setState({ query: text })}
-                        placeholder="Search for a word"
-                        renderItem={({ item }) => {
-                            // console.log('title', title)
-                            const { word } = item
-                            return (
-                                <TouchableOpacity key={word} onPress={() => this.navigateToWord(item)}>
-                                    <Text style={styles.itemText}>
-                                        {word}
-                                    </Text>
-                                </TouchableOpacity>
-                            )
-                        }}
-                    />
-                </ImageBackground>
+                  <ImageBackground
+                      source={require('../assets/images/nitinaht-lake-min.png')}
+                      style={{ height: '100%', width: '100%', backgroundColor: '#525D7E' }}
+                  >
+                      {this.props.screenProps.fetching ?
+                        <View style={styles.fetchingContainer}>
+                          <Text style={styles.fetchingText}>Loading Words...</Text>
+                        </View>
+                      :
+                        <Autocomplete
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            containerStyle={styles.autocompleteContainer}
+                            data={data.length === 1 && comp(query, data[0].word) ? [] : data}
+                            defaultValue={query}
+                            onChangeText={text => this.setState({ query: text })}
+                            placeholder="Search for a word"
+                            renderItem={({ item }) => {
+                                // console.log('title', title)
+                                const { word } = item
+                                return (
+                                    <TouchableOpacity key={word} onPress={() => this.navigateToWord(item)}>
+                                        <Text style={styles.itemText}>
+                                            {word}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+                            }}
+                        />
+                      }
+                  </ImageBackground>
             </View>
         );
     }
@@ -87,6 +82,20 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F5FCFF',
         flex: 1,
+    },
+    fetchingContainer : {
+        flex: 1,
+        left: '10%',
+        position: 'absolute',
+        right: 0,
+        top: '20%',
+        zIndex: 1,
+        width: '80%'
+    },
+    fetchingText : {
+      color:'white',
+      fontSize:20,
+      textAlign:'center'
     },
     autocompleteContainer: {
         flex: 1,

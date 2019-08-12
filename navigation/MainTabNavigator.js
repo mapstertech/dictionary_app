@@ -6,6 +6,7 @@ import TabBarIcon from '../components/TabBarIcon';
 
 import HomeScreen from '../screens/Home';
 import ListScreen from '../screens/List';
+import SettingsScreen from '../screens/Settings';
 import WordDetailScreen from '../screens/WordDetail';
 
 const config = Platform.select({
@@ -54,9 +55,26 @@ ListStack.navigationOptions = {
 
 ListStack.path = '';
 
+const SettingsStack = createStackNavigator(
+  {
+    Settings : SettingsScreen
+  },
+  config
+);
+
+SettingsStack.navigationOptions = {
+  tabBarLabel: 'Settings',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-settings' : 'md-settings'} />
+  ),
+};
+
+SettingsStack.path = '';
+
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  ListStack
+  ListStack,
+  SettingsStack
 });
 
 tabNavigator.path = '';

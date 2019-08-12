@@ -3,8 +3,9 @@ import {
     StyleSheet,
     Text,
     View,
-    ScrollView,
-    Animated
+    FlatList,
+    Animated,
+    AsyncStorage
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -16,26 +17,15 @@ export default class List extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            words: false,
+            searchedWords: false,
             categories: false,
             currentCategories : 'All',
             animateFilterPanel : new Animated.Value(-300)
         }
     }
 
-    async componentDidMount() {
-        const data = require('../assets/rubys-sample-data.json')
-        let categories = ['All'];
-        data.map(item => {
-            if (categories.indexOf(item.grammar) === -1) {
-                categories.push(item.grammar);
-            }
-        })
-        this.setState({ 
-            words : data,
-            originalWords : JSON.parse(JSON.stringify(data)),
-            categories
-        })
+    componentDidMount() {
+      this.setState({searchedWords:this.props.screenProps.words})
     }
 
     navigateToWord = (data) => {
@@ -45,9 +35,9 @@ export default class List extends Component {
     }
 
     filterWords = (category) => {
-        const { originalWords } = this.state;
-        let words = category === 'All' ? originalWords : originalWords.filter(word => word.grammar === category);
-        this.setState({ words, currentCategories : category });
+        const { words } = this.props.screenProps;
+        let searchedWords = category === 'All' ? words : words.filter(word => word.grammar === category);
+        this.setState({ searchedWords, currentCategories : category });
     }
 
     toggleFilterPanel() {
@@ -57,81 +47,90 @@ export default class List extends Component {
             this.state.animateFilterPanel,
             {
                 toValue : toValue,
-                duration : 500 
+                duration : 500
             }
         ).start();
 
         this.setState({ filtersOpen : !this.state.filtersOpen });
     }
 
+    renderItem = ({item}) => {
+      return (
+        <TouchableOpacity key={item.id.toString()} onPress={() => this.navigateToWord(item)}>
+          <Text style={styles.itemText}>
+              {item.word}
+          </Text>
+        </TouchableOpacity>
+      )
+    }
+
     render() {
-        const { words, categories, currentCategories, animateFilterPanel } = this.state;
-        
-        let sortedWords = words ? words.sort((a,b) => (a.word> b.word) ? 1 : ((b.word> a.word) ? -1 : 0)) : [];
+        const { searchedWords, categories, currentCategories, animateFilterPanel } = this.state;
+
+        let sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.word> b.word) ? 1 : ((b.word> a.word) ? -1 : 0)) : [];
 
         return (
-            <View style={styles.container}>
-                <View style={styles.filterPreview}>
-                    <Text style={{ color : '#fff', fontWeight : 'bold', textTransform : 'capitalize'}}>
-                       {currentCategories} Words
-                    </Text>
-                    <TouchableOpacity 
-                        onPress={() => this.toggleFilterPanel()}
-                        style={styles.closeButton}
-                    >
-                        <Text style={styles.closeButtonText}>
-                          Categories 
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <ScrollView>
-                    { sortedWords.map(word => {
-                        return (
-                            <TouchableOpacity key={word.word} onPress={() => this.navigateToWord(word)}>
-                                <Text style={styles.itemText}>
-                                    {word.word}
-                                </Text>
-                            </TouchableOpacity>
-                        )
-                    })}
-                </ScrollView>
+          <View styles={styles.container}>
 
-                <Animated.View style={[styles.filterPanel, { top : animateFilterPanel } ]}>
-                    <View style={{ margin : 15 }}>
-                        <Text style={styles.filterLabel}>
-                            Grammar
-                        </Text>
-                        <View style={{ flexDirection : 'row' }}>
-                            { categories && categories.map(cat=> {
-                                return (
-                                    <TouchableOpacity 
-                                        onPress={() => this.filterWords(cat)}
-                                        key={cat} 
-                                        style={[styles.filterButton, currentCategories === cat ? styles.activeButton : null ]}
-                                    >
-                                        <Text style={[ styles.filterButtonText, currentCategories === cat ? styles.activeText : null ]}>
-                                            {cat}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )
-                            })}
-                        </View>
+              <View style={styles.filterPreview}>
+                  <Text style={{ color : '#fff', fontWeight : 'bold', textTransform : 'capitalize'}}>
+                     {currentCategories} Words
+                  </Text>
+                  <TouchableOpacity
+                      onPress={() => this.toggleFilterPanel()}
+                      style={styles.closeButton}
+                  >
+                      <Text style={styles.closeButtonText}>
+                        Categories
+                      </Text>
+                  </TouchableOpacity>
+              </View>
+
+              <FlatList
+                data={sortedWords}
+                initialNumToRender={5}
+                maxToRenderPerBatch={10}
+                windowSize={10}
+                keyExtractor={(item, index) => item.id.toString()}
+                renderItem={this.renderItem} />
+
+              <Animated.View style={[styles.filterPanel, { top : animateFilterPanel } ]}>
+                <View style={{ margin : 15 }}>
+                    <Text style={styles.filterLabel}>
+                        Grammar
+                    </Text>
+                    <View style={{ flexDirection : 'row' }}>
+                        { categories && categories.map(cat=> {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => this.filterWords(cat)}
+                                    key={cat}
+                                    style={[styles.filterButton, currentCategories === cat ? styles.activeButton : null ]}
+                                >
+                                    <Text style={[ styles.filterButtonText, currentCategories === cat ? styles.activeText : null ]}>
+                                        {cat}
+                                    </Text>
+                                </TouchableOpacity>
+                            )
+                        })}
                     </View>
-                    <TouchableOpacity onPress={() => this.toggleFilterPanel()} style={styles.closeButton}>
-                        <Text style={styles.closeButtonText}>
-                           Done 
-                        </Text>
-                    </TouchableOpacity>
-                </Animated.View>
-            </View>
+                </View>
+                <TouchableOpacity onPress={() => this.toggleFilterPanel()} style={styles.closeButton}>
+                    <Text style={styles.closeButtonText}>
+                       Done
+                    </Text>
+                </TouchableOpacity>
+              </Animated.View>
+          </View>
         );
     }
 }
 
+
+
 const styles = StyleSheet.create({
     container : {
         backgroundColor: '#fff',
-        flex: 1,
         zIndex: 1000
     },
     filterPreview : {

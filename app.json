@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Ditidaht Dictionary",
-    "slug": "dictionary_app",
+    "slug": "ditidahtdictionary",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.jpg",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -24,6 +24,8 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier" : "com.ditidahtdictionary.*",
+      "buildNumber" : "1.0",
       "supportsTablet": true
     }
   }
