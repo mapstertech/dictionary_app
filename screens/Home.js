@@ -27,7 +27,11 @@ export default class HomeScreen extends Component {
 
         const { words } = this.props.screenProps;
         const regex = new RegExp(`${query.trim()}`, 'i');
-        return words.filter((data) => data.word.search(regex) >= 0);
+        //return words.filter((data) => data.word.search(regex) >= 0);
+
+        let english  = words.filter((data) => data.meaning.search(regex) >= 0);
+        let ditidaht = words.filter((data) => data.word.search(regex) >= 0);
+        return english.concat(ditidaht);
     }
 
     navigateToWord = (data) => {

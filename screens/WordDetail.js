@@ -86,7 +86,7 @@ export default class WordDetailScreen extends Component {
                         })}
                         */}
 
-                        <View style={{ position : 'absolute' , top : 10, right : 15 }}>
+                        <View style={{ position : 'absolute' , top : 10, right : 0 }}>
                             <TouchableOpacity onPress={this.playAudio}>
                                 <Ionicons
                                   name={
@@ -110,16 +110,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         flex: 1,
         alignItems: 'center',
-        zIndex: 1000
+        zIndex: 1000,
+        marginHorizontal : 10 
     },
     word : {
         fontSize : 24,
         fontWeight : 'bold',
+        marginHorizontal : 20 
     },
     meaning : {
         fontStyle : 'italic',
         fontSize : 18,
-        color : '#444'
+        color : '#444',
+        marginTop : 10
     },
     grammar : {
         textTransform : 'capitalize',
