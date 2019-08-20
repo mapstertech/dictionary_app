@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     word : {
         fontSize : 24,
         fontWeight : 'bold',
-        textTransform : 'capitalize'
     },
     meaning : {
         fontStyle : 'italic',

@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
         padding : 8,
         borderBottomWidth : 1,
         borderBottomColor : '#eee',
-        textTransform : 'capitalize'
     },
     descriptionContainer: {
         // `backgroundColor` needs to be set otherwise the
