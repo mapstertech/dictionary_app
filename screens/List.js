@@ -20,7 +20,8 @@ export default class List extends Component {
             searchedWords: false,
             categories: false,
             currentCategories : 'All',
-            animateFilterPanel : new Animated.Value(-300)
+            animateFilterPanel : new Animated.Value(-300),
+            language : 'ditidaht'
         }
     }
 
@@ -57,25 +58,52 @@ export default class List extends Component {
     renderItem = ({item}) => {
       return (
         <TouchableOpacity key={item.id.toString()} onPress={() => this.navigateToWord(item)}>
-          <Text style={styles.itemText}>
-              {item.word}
-          </Text>
+          {this.state.language === 'ditidaht' ? 
+              <Text style={styles.itemText}>
+                  {item.word}
+              </Text>
+          :
+              <Text style={styles.itemText}>
+                  {item.meaning}
+              </Text>
+          }
         </TouchableOpacity>
       )
     }
 
     render() {
-        const { searchedWords, categories, currentCategories, animateFilterPanel } = this.state;
+        const { searchedWords, categories, currentCategories, animateFilterPanel, language } = this.state;
 
-        let sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.word> b.word) ? 1 : ((b.word> a.word) ? -1 : 0)) : [];
+        let sortedWords = [];
+        if ( this.state.language === 'ditidaht' ) {
+            sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.word> b.word) ? 1 : ((b.word> a.word) ? -1 : 0)) : [];
+        } else {
+            sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.meaning > b.meaning) ? 1 : ((b.meaning > a.meaning) ? -1 : 0)) : [];
+        }
 
         return (
           <View styles={styles.container}>
 
               <View style={styles.filterPreview}>
-                  <Text style={{ color : '#fff', fontWeight : 'bold', textTransform : 'capitalize'}}>
-                     {currentCategories} Words
-                  </Text>
+                  <View style={{ alignItems : 'center' }}>
+                      <Text style={{ color : '#fff', fontWeight : 'bold', textTransform : 'capitalize'}}>
+                         {currentCategories} Words
+                      </Text>
+
+                      <View style={styles.langToggleWrap}>
+                          <TouchableOpacity onPress={() => this.setState({ language : 'ditidaht' })}>
+                              <Text style={[styles.langToggle, language == 'ditidaht' ? styles.langToggleActive : null ]}>
+                                Ditidaht
+                              </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity onPress={() => this.setState({ language : 'english' })}>
+                              <Text style={[styles.langToggle, language == 'english' ? styles.langToggleActive : null ]}>
+                                English
+                              </Text>
+                          </TouchableOpacity>
+                      </View>
+                  </View>
+
                   <TouchableOpacity
                       onPress={() => this.toggleFilterPanel()}
                       style={styles.closeButton}
@@ -92,6 +120,7 @@ export default class List extends Component {
                 maxToRenderPerBatch={10}
                 windowSize={10}
                 keyExtractor={(item, index) => item.id.toString()}
+                extraData={this.state}
                 renderItem={this.renderItem} />
 
               <Animated.View style={[styles.filterPanel, { top : animateFilterPanel } ]}>
@@ -215,5 +244,21 @@ const styles = StyleSheet.create({
     closeButtonText : {
         fontWeight : 'bold',
         color : '#fff'
+    },
+    langToggleWrap : {
+        borderWidth : 1,
+        borderRadius : 2,
+        borderColor : '#fff',
+        flexDirection : 'row',
+        marginTop : 10
+    },
+    langToggle : {
+        padding : 7,
+        color : '#fff',
+        fontWeight : 'bold',
+        opacity : 0.3
+    },
+    langToggleActive : {
+        opacity : 1,
     }
 });
