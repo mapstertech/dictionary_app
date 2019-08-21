@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
         padding : 12,
         color : '#000',
         fontSize : 15,
-        textTransform : 'uppercase',
         borderBottomColor : '#eee',
         borderBottomWidth : 1
     },
