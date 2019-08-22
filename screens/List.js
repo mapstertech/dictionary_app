@@ -78,7 +78,7 @@ export default class List extends Component {
         if ( this.state.language === 'ditidaht' ) {
             sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.word> b.word) ? 1 : ((b.word> a.word) ? -1 : 0)) : [];
         } else {
-            sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.meaning > b.meaning) ? 1 : ((b.meaning > a.meaning) ? -1 : 0)) : [];
+            sortedWords = searchedWords ? searchedWords.sort((a,b) => (a.meaning.toLowerCase() > b.meaning.toLowerCase()) ? 1 : ((b.meaning.toLowerCase() > a.meaning.toLowerCase()) ? -1 : 0)) : [];
         }
 
         return (
