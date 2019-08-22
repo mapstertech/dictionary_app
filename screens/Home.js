@@ -40,6 +40,25 @@ export default class HomeScreen extends Component {
         })
     }
 
+    englishPreview(meaning) {
+
+        // crop by character count
+        /*
+        if (meaning.length < 24) {
+            return meaning;
+        } else {
+            return meaning.slice(0, 24) + '...';
+        }
+        */
+
+        // crop by word count
+        let arr = meaning.split(' ');
+        let ellipsis = arr.length > 5 ? '...' : '';
+        arr.length = 5;
+        let newStr = arr.join(' ');
+        return newStr + ellipsis;
+    }
+
     render() {
         const { query } = this.state;
         const data = this.filterData(query);
@@ -65,11 +84,18 @@ export default class HomeScreen extends Component {
                             placeholder="Search for a word"
                             renderItem={({ item }) => {
                                 // console.log('title', title)
-                                const { word } = item
+                                const { word, meaning } = item
                                 return (
-                                    <TouchableOpacity key={word} onPress={() => this.navigateToWord(item)}>
-                                        <Text style={styles.itemText}>
+                                    <TouchableOpacity 
+                                        key={word} 
+                                        onPress={() => this.navigateToWord(item)} 
+                                        style={styles.itemText}
+                                    >
+                                        <Text style={{ maxWidth : '65%', fontSize : 18 }}>
                                             {word}
+                                        </Text>
+                                        <Text style={styles.meaningText}>
+                                            {this.englishPreview(meaning)}
                                         </Text>
                                     </TouchableOpacity>
                                 )
@@ -111,10 +137,12 @@ const styles = StyleSheet.create({
         width: '80%'
     },
     itemText: {
-        fontSize: 18,
         padding : 8,
         borderBottomWidth : 1,
         borderBottomColor : '#eee',
+        flexDirection : 'row',
+        alignItems : 'center',
+        justifyContent : 'space-between',
     },
     descriptionContainer: {
         // `backgroundColor` needs to be set otherwise the
@@ -140,5 +168,15 @@ const styles = StyleSheet.create({
     },
     openingText: {
         textAlign: 'center'
+    },
+    meaningText : {
+        fontSize : 14,
+        color : '#aaa',
+        marginLeft : 10,
+        flexWrap : 'wrap',
+        maxWidth : '100%',
+        flex : 1, 
+        textAlign : 'right'
+
     }
 });
