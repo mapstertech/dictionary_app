@@ -8,6 +8,12 @@ import {
 } from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
 
+const ditiChars = [
+  "ƛ", "ƛ̓", "ʔ", "ʕ", "b̓", "c̓", "č", "č̓", "d̓", "kʷ", "k̓",
+  "k̓ʷ","l̓","ł","m̓","n̓","p̓","qʷ","q̓","q̓ʷ","š","t̓","w̓","xʷ",
+  "x̣","x̣ʷ","y̓","–"
+]
+
 export default class HomeScreen extends Component {
     static navigationOptions = {
         title: 'Dictionary',
@@ -16,7 +22,7 @@ export default class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            query: ''
+            query: '',
         };
     }
 
@@ -60,7 +66,7 @@ export default class HomeScreen extends Component {
     }
 
     render() {
-        const { query } = this.state;
+        const { query, showKeyboard } = this.state;
         const data = this.filterData(query);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
         return (
@@ -74,33 +80,51 @@ export default class HomeScreen extends Component {
                           <Text style={styles.fetchingText}>Loading Words...</Text>
                         </View>
                       :
-                        <Autocomplete
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            containerStyle={styles.autocompleteContainer}
-                            data={data.length === 1 && comp(query, data[0].word) ? [] : data}
-                            defaultValue={query}
-                            onChangeText={text => this.setState({ query: text })}
-                            placeholder="Search for a word"
-                            renderItem={({ item }) => {
-                                // console.log('title', title)
-                                const { word, meaning } = item
-                                return (
-                                    <TouchableOpacity 
-                                        key={word} 
-                                        onPress={() => this.navigateToWord(item)} 
-                                        style={styles.itemText}
-                                    >
-                                        <Text style={{ maxWidth : '65%', fontSize : 18 }}>
-                                            {word}
-                                        </Text>
-                                        <Text style={styles.meaningText}>
-                                            {this.englishPreview(meaning)}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )
-                            }}
-                        />
+                        <View style={{ justifyContent : 'center', height : "100%" }}>
+                           { showKeyboard ? 
+                               <View style={styles.keyboard}>
+                                   {ditiChars.map(letter => {
+                                        return (
+                                            <Text 
+                                                style={styles.keyboardKey} 
+                                                onPress={() => this.setState({ query : query + letter })}
+                                                key={letter}
+                                            > 
+                                                {letter} 
+                                            </Text>
+                                        )
+                                   })}
+                               </View>
+                               : null }
+
+                                <Autocomplete
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    containerStyle={styles.autocompleteContainer}
+                                    data={data.length === 1 && comp(query, data[0].word) ? [] : data}
+                                    onFocus={() => this.setState({ showKeyboard : true })}  defaultValue={query}
+                                    onChangeText={text => this.setState({ query: text })}
+                                    placeholder="Search for a word"
+                                    renderItem={({ item }) => {
+                                        // console.log('title', title)
+                                        const { word, meaning } = item
+                                        return (
+                                            <TouchableOpacity 
+                                                key={word} 
+                                                onPress={() => this.navigateToWord(item)} 
+                                                style={styles.itemText}
+                                            >
+                                                <Text style={{ maxWidth : '65%', fontSize : 18 }}>
+                                                    {word}
+                                                </Text>
+                                                <Text style={styles.meaningText}>
+                                                    {this.englishPreview(meaning)}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )
+                                    }}
+                                />
+                        </View>
                       }
                   </ImageBackground>
             </View>
@@ -133,6 +157,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: '40%',
+        //top: '10%',
         zIndex: 1,
         width: '80%'
     },
@@ -178,5 +203,29 @@ const styles = StyleSheet.create({
         flex : 1, 
         textAlign : 'right'
 
+    },
+    keyboard : {
+        backgroundColor : "rgba(255,255,255,0.5)",
+        left: '10%',
+        position: 'absolute',
+        right: 0,
+        top: '5%',
+        zIndex: 1,
+        width: '80%',
+        flexWrap : 'wrap',
+        flexDirection : 'row',
+        padding : 2,
+        borderRadius : 2
+    },
+    keyboardKey : {
+        backgroundColor : "rgba(255,255,255,0.8)",
+        margin : 2,
+        paddingHorizontal : 10,
+        paddingVertical : 3,
+        minWidth : '15%',
+        fontSize : 20,
+        flexGrow : 1,
+        borderRadius : 2,
+        textAlign : 'center'
     }
 });
