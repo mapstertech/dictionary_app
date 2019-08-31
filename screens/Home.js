@@ -36,7 +36,9 @@ export default class HomeScreen extends Component {
         //return words.filter((data) => data.word.search(regex) >= 0);
 
         let english  = words.filter((data) => data.meaning.search(regex) >= 0);
+        english = english.sort((data) => data.meaning === query ? -1 : 1);
         let ditidaht = words.filter((data) => data.word.search(regex) >= 0);
+        ditidaht = ditidaht.sort((data) => data.word === query ? -1 : 1);
         return english.concat(ditidaht);
     }
 
@@ -80,22 +82,22 @@ export default class HomeScreen extends Component {
                           <Text style={styles.fetchingText}>Loading Words...</Text>
                         </View>
                       :
-                        <View style={{ justifyContent : 'center', height : "100%" }}>
-                           { showKeyboard ? 
+                        <View style={{ height: '100%' }}>
+                           { showKeyboard ?
                                <View style={styles.keyboard}>
                                    {ditiChars.map(letter => {
                                         return (
-                                            <Text 
-                                                style={styles.keyboardKey} 
+                                            <Text
+                                                style={styles.keyboardKey}
                                                 onPress={() => this.setState({ query : query + letter })}
                                                 key={letter}
-                                            > 
-                                                {letter} 
+                                            >
+                                                {letter}
                                             </Text>
                                         )
                                    })}
                                </View>
-                               : null }
+                           : null }
 
                                 <Autocomplete
                                     autoCapitalize="none"
@@ -105,13 +107,14 @@ export default class HomeScreen extends Component {
                                     onFocus={() => this.setState({ showKeyboard : true })}  defaultValue={query}
                                     onChangeText={text => this.setState({ query: text })}
                                     placeholder="Search for a word"
+                                    keyExtractor={(item, index) => item.id.toString()}
+                                    listStyle={{maxHeight: 200}}
                                     renderItem={({ item }) => {
                                         // console.log('title', title)
                                         const { word, meaning } = item
                                         return (
-                                            <TouchableOpacity 
-                                                key={word} 
-                                                onPress={() => this.navigateToWord(item)} 
+                                            <TouchableOpacity
+                                                onPress={() => this.navigateToWord(item)}
                                                 style={styles.itemText}
                                             >
                                                 <Text style={{ maxWidth : '65%', fontSize : 18 }}>
@@ -156,7 +159,7 @@ const styles = StyleSheet.create({
         left: '10%',
         position: 'absolute',
         right: 0,
-        top: '40%',
+        top: '30%',
         //top: '10%',
         zIndex: 1,
         width: '80%'
@@ -200,7 +203,7 @@ const styles = StyleSheet.create({
         marginLeft : 10,
         flexWrap : 'wrap',
         maxWidth : '100%',
-        flex : 1, 
+        flex : 1,
         textAlign : 'right'
 
     },
@@ -209,7 +212,7 @@ const styles = StyleSheet.create({
         left: '10%',
         position: 'absolute',
         right: 0,
-        top: '5%',
+        top: '2%',
         zIndex: 1,
         width: '80%',
         flexWrap : 'wrap',
@@ -223,7 +226,7 @@ const styles = StyleSheet.create({
         paddingHorizontal : 10,
         paddingVertical : 3,
         minWidth : '15%',
-        fontSize : 20,
+        fontSize : 17,
         flexGrow : 1,
         borderRadius : 2,
         textAlign : 'center'

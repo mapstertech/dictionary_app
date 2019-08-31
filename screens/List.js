@@ -58,7 +58,7 @@ export default class List extends Component {
     renderItem = ({item}) => {
       return (
         <TouchableOpacity key={item.id.toString()} onPress={() => this.navigateToWord(item)}>
-          {this.state.language === 'ditidaht' ? 
+          {this.state.language === 'ditidaht' ?
               <Text style={styles.itemText}>
                   {item.word}
               </Text>

@@ -28,6 +28,20 @@ export default class App extends Component {
         if (value !== null && !forceFetch) {
           console.log('from storage');
           this.setState({words:JSON.parse(value), fetching: false});
+          // Comparing if remote is equal
+          // Would be better to have a version number we update instead of fetching everything uselessly
+          fetch('http://ditidahtdictionary.com/wp-json/words/all')
+            .then((response) => response.json())
+            .then((responseJson) => {
+              console.log('fetch for check')
+              if(JSON.stringify(responseJson)!==value) {
+                console.log('not equal, replace');
+                this.setState({words:responseJson});
+                AsyncStorage.setItem('DitidahtWordlist', JSON.stringify(responseJson));
+              }
+          }).catch((error) => {
+              console.log(error);
+          });
         } else {
           console.log('fetching');
           fetch('http://ditidahtdictionary.com/wp-json/words/all')
