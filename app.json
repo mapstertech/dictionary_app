@@ -27,6 +27,9 @@
       "bundleIdentifier" : "com.ditidahtdictionary",
       "buildNumber" : "1.2",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.ditidahtschool.ditidahtdictionary"
     }
   }
 }
