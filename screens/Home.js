@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
         left: '10%',
         position: 'absolute',
         right: 0,
-        top: 10,
+        top: 20,
         //top: '10%',
         zIndex: 1,
         width: '80%'
