@@ -50,6 +50,7 @@ export default class HomeScreen extends Component {
     keyboardWillShow = (event) => {
 
         const keyboardHeight = event.endCoordinates.height;
+        const offSet = Platform.OS === 'ios' ? -70 : -88;
         /*
         console.log(screenHeight, ' screen height', Platform.OS);
         console.log(keyboardHeight, ' leyboard height', Platform.OS);
@@ -57,7 +58,7 @@ export default class HomeScreen extends Component {
 
         Animated.timing(this.keyboardPosY, {
             duration: event.duration,
-            toValue: this.screenHeight - keyboardHeight - 90,
+            toValue: this.screenHeight - keyboardHeight + offSet,
         }).start();
     };
 
