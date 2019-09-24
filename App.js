@@ -24,6 +24,7 @@ export default class App extends Component {
     this.state = {
       loading: true,
       fetching: false,
+      ditiLetter : false,
       words: []
     };
   }
@@ -94,11 +95,12 @@ export default class App extends Component {
             screenProps={{
               words: this.state.words,
               fetching: this.state.fetching,
+              ditiLetter : this.state.ditiLetter,
               _loadInitialState: this._loadInitialState
             }}
           />
           <KeyboardAccessoryView>
-            <DitidahtKeyboard />
+            <DitidahtKeyboard ditiKeyPress={(letter) => this.setState({ ditiLetter : letter })} />
           </KeyboardAccessoryView>
         </View>
       );

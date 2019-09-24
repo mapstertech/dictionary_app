@@ -28,6 +28,13 @@ export default class HomeScreen extends Component {
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.screenProps && nextProps.screenProps.ditiLetter) {
+            let newLetter = nextProps.screenProps.ditiLetter;
+            this.setState({ query : this.state.query + newLetter }); 
+        }
+    }
+
     filterData(query) {
         if (query === '') {
             return [];

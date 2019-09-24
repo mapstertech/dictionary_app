@@ -55,7 +55,8 @@ export class DitidahtKeyboard extends Component {
             return (
               <Text
                 style={styles.keyboardKey}
-                onPress={() => this.setState({ query: query + letter })}
+                //onPress={() => this.setState({ query: query + letter })}
+                onPress={() => this.props.ditiKeyPress(letter)}
                 key={letter}
               >
                 {letter}
