@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     margin: 2,
     paddingHorizontal: 12,
     paddingVertical: 5,
-    minWidth: "15%",
+    //minWidth: "15%",
     flexDirection: "row",
     flexWrap: "nowrap",
     width: 45,
