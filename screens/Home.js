@@ -14,11 +14,7 @@ import {
 import Autocomplete from 'react-native-autocomplete-input';
 import { Ionicons } from '@expo/vector-icons';
 
-const ditiChars = [
-  "ƛ", "ƛ̓", "ʔ", "ʕ", "b̓", "c̓", "č", "č̓", "d̓", "kʷ", "k̓",
-  "k̓ʷ","l̓","ł","m̓","n̓","p̓","qʷ","q̓","q̓ʷ","š","t̓","w̓","xʷ",
-  "x̣","x̣ʷ","y̓","–"
-]
+
 
 export default class HomeScreen extends Component {
     static navigationOptions = {
@@ -27,48 +23,10 @@ export default class HomeScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.screenHeight = Dimensions.get('window').height;
-        this.screenWidth = Dimensions.get('window').width;
-        this.keyboardPosY = new Animated.Value(this.screenHeight);
         this.state = {
             query: '',
-            //showKeyboard : true,
-            currentPos : 0
         };
     }
-
-    componentDidMount() {
-        this.keyboardWillShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardWillShow);
-        this.keyboardWillHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardWillHide);
-    }
-
-    componentWillUnmount() {
-        this.keyboardWillShowSub.remove();
-        this.keyboardWillHideSub.remove();
-    }
-
-    keyboardWillShow = (event) => {
-
-        const keyboardHeight = event.endCoordinates.height;
-        const offSet = Platform.OS === 'ios' ? -70 : -88;
-        /*
-        console.log(screenHeight, ' screen height', Platform.OS);
-        console.log(keyboardHeight, ' leyboard height', Platform.OS);
-        */
-
-        Animated.timing(this.keyboardPosY, {
-            duration: event.duration,
-            toValue: this.screenHeight - keyboardHeight + offSet,
-        }).start();
-    };
-
-    keyboardWillHide = (event) => {
-        Animated.timing(this.keyboardPosY, {
-            //duration: event.duration,
-            duration : 200,
-            toValue: this.screenHeight,
-        }).start();
-    };
 
     filterData(query) {
         if (query === '') {
@@ -123,7 +81,7 @@ export default class HomeScreen extends Component {
     }
 
     render() {
-        const { query, showKeyboard } = this.state;
+        const { query } = this.state;
         const data = this.filterData(query);
         const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
 
@@ -168,55 +126,6 @@ export default class HomeScreen extends Component {
                                     )
                                 }}
                             />
-                                
-                           { showKeyboard ?
-                               <View style={[styles.keyboardWrap]}>
-                                   <Ionicons
-                                      name={
-                                        Platform.OS === 'ios'
-                                          ? 'ios-arrow-back'
-                                          : 'md-arrow-dropleft'
-                                      }
-                                      size={26}
-                                      style={styles.arrowIcon}
-                                      onPress={() => this.scrollMiniKeyboard('back')}
-                                   />
-
-                                   <ScrollView 
-                                    horizontal 
-                                    keyboardShouldPersistTaps="always" 
-                                    style={styles.keyboard}
-                                    onScroll={(event) => this.setState({ currentPos : event.nativeEvent.contentOffset.x })}
-                                    scrollEventThrottle={0}
-                                    ref={(node) => this.scroll = node}
-                                   >
-                                       {ditiChars.map(letter => {
-                                            return (
-                                                <Text
-                                                    style={styles.keyboardKey}
-                                                    onPress={() => this.setState({ query : query + letter })}
-                                                    key={letter}
-                                                >
-                                                    {letter}
-                                                </Text>
-                                            )
-                                       })}
-                                   </ScrollView>
-
-                                   <Ionicons
-                                      name={
-                                        Platform.OS === 'ios'
-                                          ? 'ios-arrow-forward'
-                                          : 'md-arrow-dropright'
-                                      }
-                                      size={26}
-                                      style={styles.arrowIcon}
-                                      onPress={() => this.scrollMiniKeyboard('forward')}
-                                   />
-
-                               </View>
-                           : null }
-
                         </Animated.View>
                       }
                   </ImageBackground>
@@ -296,64 +205,5 @@ const styles = StyleSheet.create({
         flex : 1,
         textAlign : 'right'
 
-    },
-    keyboardWrap : {
-        position : 'absolute',
-        overflow : 'hidden',
-        //left: '10%',
-        width : '100%',
-        //right : 0,
-        //top: '2%',
-        bottom : 0,
-        flex : 1,
-        flexDirection : 'row',
-        flexWrap : 'nowrap',
-        //maxHeight : 40,
-        //height : 40
-        backgroundColor : "rgba(255,255,255,0.5)",
-    },
-    keyboard : {
-        overflow : 'visible',
-        width : '100%',
-        paddingRight : 200,
-        //left: '10%',
-        //top: '2%',
-        //zIndex: 1,
-        //maxWidth : '100%',
-        //width: '100%',
-        //flexWrap : 'wrap',
-        //justifyContent : 'center',
-        //flexDirection : 'row',
-        //padding : 2,
-        //flex : 1,
-        //borderRadius : 2,
-    },
-    keyboardKey : {
-        backgroundColor : "rgba(240,240,240,1)",
-        margin : 2,
-        paddingHorizontal : 12,
-        paddingVertical : 5,
-        minWidth : '15%',
-        flexDirection : 'row',
-        flexWrap : 'nowrap',
-        width : 45,
-        height : 40,
-        fontSize : 20,
-        flexGrow : 1,
-        borderRadius : 2,
-        textAlign : 'center'
-    },
-    arrowIcon : {
-        width : 40,
-        height : '100%',
-        alignSelf : 'center',
-        paddingTop : 7,
-        borderRadius : 2,
-        borderWidth : 0.5,
-        borderColor : '#ccc',
-        textAlign : 'center',
-        opacity : 1,
-        zIndex : 2,
-        backgroundColor : '#fff'
     }
 });
