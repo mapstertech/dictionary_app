@@ -42,10 +42,10 @@ export default class WordDetailScreen extends Component {
 
     playAudio = async () => {
         // load and play audio
-        const sound = new Audio.Sound()
-        await sound.unloadAsync()
-        await sound.loadAsync(require('../assets/marbles-daniel_simon.mp3'))
-        await sound.playAsync()
+        // const sound = new Audio.Sound()
+        // await sound.unloadAsync()
+        // await sound.loadAsync(require('../assets/marbles-daniel_simon.mp3'))
+        // await sound.playAsync()
     }
 
     render() {
@@ -63,8 +63,8 @@ export default class WordDetailScreen extends Component {
                             </Text>
                         </View>
 
-                        { word.images ? 
-                            <Image 
+                        { word.images ?
+                            <Image
                                 source={{ uri: word.images }}
                                 style={{ height: 200, width: 'auto', margin : 20, borderWidth : 1  }}
                             />
@@ -111,12 +111,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         zIndex: 1000,
-        marginHorizontal : 10 
+        marginHorizontal : 10
     },
     word : {
         fontSize : 24,
         fontWeight : 'bold',
-        marginHorizontal : 20 
+        marginHorizontal : 20
     },
     meaning : {
         fontStyle : 'italic',
