@@ -34,7 +34,7 @@
     "expo-font": "^5.0.0",
     "expo-web-browser": "^5.0.0",
     "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "knex": "^0.19.0",
     "morgan": "^1.9.1",
     "nodemailer": "^6.3.0",
